@@ -149,7 +149,7 @@
                 // Display posts in the #posts div
                 const postsDiv = document.getElementById('posts');
                 posts.forEach(post => {
-                    if (!post || !post.Author) {return;}
+                    if (post.Content === undefined){continue;}
                     const postElement = document.createElement('div');
                     postElement.innerHTML = `
                     <section id="post">
