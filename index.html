@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rogue Planet Studios</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <meta property="og:title" content="Rogue Planet Studios" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://rogueplanetstudios.eu.org" />
+    <meta property="og:description" content="Welcome to Rogue Planet Studios. Explore our projects and stay updated with the latest news." />
+    <meta property="og:image" content="logo.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #222;
+            color: #fff;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            position: fixed top;
+            width: 100%;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+
+        #post, #posts{
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            transition: background-color 0.3s;
+            align-items: center;
+            align-self: center;
+            align-content: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            transition: background-color 1.5s;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 1.5s;
+        }
+
+        nav a:hover {
+            background-color: #555;
+            transition: background-color 0.3s;
+        }
+
+        section {
+            width: 75%;
+            margin: 80px auto 40px auto; /* Adjusted the top margin */
+            padding: 20px;
+            background-color: #333;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            color: #fff;
+        }
+
+        h2 {
+            color: #ff8c42;
+        }
+
+        p {
+            color: #bbb;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            position: fixed bottom;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 style="margin: 0;">Rogue Planet Studios</h1>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Projects</a>
+            <a href="#">News</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+    
+    <section>
+        <h2>Welcome</h2>
+        <p>Explore our projects and stay updated with the latest news.</p>
+    </section>
+    <center>
+    <div id="posts">
+        <!-- Posts WILL be displayed here - Korin 🕺-->
+    </div>
+</center>
+    
+    <footer>
+        &copy; 2024 Rogue Planet Studios. All rights reserved.
+    </footer>
+    
+    <script>
+        // Function to fetch and display posts
+        async function fetchAndDisplayPosts() {
+            try {
+                // Fetch data from posts.csv
+                const response = await fetch('posts.csv');
+                const data = await response.text();
+    
+                // Parse CSV data
+                const rows = data.split('\n');
+                const headers = rows[0].split(',');
+                const posts = rows.slice(1).map(row => {
+                    const post = {};
+                    row.split(',').forEach((value, index) => {
+                        post[headers[index].trim()] = value.trim();
+                    });
+                    return post;
+                });
+    
+                // Display posts in the #posts div
+                const postsDiv = document.getElementById('posts');
+                posts.forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.innerHTML = `
+                    <section id="post">
+                        <h2>${post.Title}</h2>
+                        <hr width="75%" style="border-color: gray;">
+                        <p>${post.Content}</p>
+                    </section>
+                    `;
+                    postsDiv.appendChild(postElement);
+                });
+            } catch (error) {
+                console.error('Error fetching and displaying posts:', error);
+            }
+        }
+    
+        // Call the function to fetch and display posts
+        fetchAndDisplayPosts();
+    </script>
+    
+    </body>
+    
+</html>
