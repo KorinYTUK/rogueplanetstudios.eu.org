@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Info</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #222;
+            color: #fff;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            position: fixed top;
+            width: 100%;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            transition: background-color 1.5s;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 1.5s;
+        }
+
+        nav a:hover {
+            background-color: #555;
+            transition: background-color 0.3s;
+        }
+
+        section {
+            width: 75%;
+            margin: 120px auto 40px auto;
+            padding: 20px;
+            background-color: #333;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        section:hover {
+            background-color: #222;
+            transition: background-color 0.3s;
+        }
+
+        h2 {
+            color: #ff8c42;
+            text-align: center;
+            font-size: xx-large;
+        }
+
+        p {
+            color: #bbb;
+            text-align: center;
+            font-style: italic;
+        }
+
+        a {
+            color: cornflowerblue;
+            text-decoration: none;
+        }
+
+        a:visited {
+            color: seagreen;
+        }
+
+        a:hover {
+            color: pink;
+            text-decoration: dotted underline;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Rogue Planet Studios</h1>
+        <nav>
+        
+            <a href="http://rogueplanetstudios.eu.org/">Home</a>
+            <a href="http://rogueplanetstudios.eu.org/projects/">Projects</a>
+            <a href="http://rogueplanetstudios.eu.org/news/">News</a>
+            <a href="http://rogueplanetstudios.eu.org/devs/">Devs</a>
+            <a href="http://rogueplanetstudios.eu.org/about">About</a>
+        
+        </nav>
+    </header>
+
+    <section id="developer-info"></section>
+
+    <script>
+        // Function to extract developer ID from the URL hash
+        function getDeveloperIDFromURL() {
+            const hash = window.location.hash.substring(1);
+            return hash ? hash : null;
+        }
+
+        // Function to fetch and display developer info
+        async function fetchDeveloperInfo(developerID) {
+            const response = await fetch('developers.csv');
+            const text = await response.text();
+            const rows = text.split('\n');
+
+            const developerInfo = document.getElementById('developer-info');
+            let foundDeveloper = false;
+
+            rows.forEach((row, index) => {
+                if (index !== 0 && row.trim() !== '') {
+                    const columns = row.split(',');
+
+                    // Assuming the order of columns in CSV is: DeveloperID,DeveloperName,Description,Website,ContactEmail
+                    const [devID, developerName, description, website, contactEmail] = columns;
+
+                    if (devID === developerID) {
+                        developerInfo.innerHTML = `
+                            <h2>${developerName}</h2>
+                            <p>${description}</p>
+                            <p><strong>Website:</strong> <a href="${website}" target="_blank">${website}</a></p>
+                            <p><strong>Contact Email:</strong> <a href="mailto:${contactEmail}">${contactEmail}</a></p>
+                        `;
+                        foundDeveloper = true;
+                    }
+                }
+            });
+
+            if (!foundDeveloper) {
+                developerInfo.innerHTML = `<h2>Ups! Developer not found.</h2>`;
+            }
+        }
+
+        // Call the functions when the page loads
+        window.onload = function () {
+            const developerID = getDeveloperIDFromURL();
+            if (developerID) {
+                fetchDeveloperInfo(developerID);
+            } else {
+                document.getElementById('developer-info').innerHTML = `
+                    <h2>Devs</h2>
+                    <br><br>
+                    <b><p>Developer ID</p></b>
+                    <center><input type="number" id="did"><br><button onclick="lookUpDeveloper()">Look up</button></center>
+                `;
+            }
+        };
+
+        // Function to look up developer by ID
+        function lookUpDeveloper() {
+            const developerID = document.getElementById('did').value;
+            if (developerID) {
+                changeURLAndFetchDeveloperInfo(developerID);
+            } else {
+                alert('Please enter a valid Developer ID.');
+            }
+        }
+
+        // Function to change the URL and fetch developer info
+        async function changeURLAndFetchDeveloperInfo(developerID) {
+            // Construct the new URL with the developer ID as the hash
+            const newURL = window.location.origin + window.location.pathname + "#developer-" + developerID;
+
+            // Change the URL
+            window.location.href = newURL;
+
+            // Fetch and display developer info based on the new URL
+            fetchDeveloperInfo(developerID);
+        }
+    </script>
+
+</body>
+</html>
