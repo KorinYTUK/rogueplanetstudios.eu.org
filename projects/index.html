@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rogue Planet Studios Games Showcase</title>
+    <meta property="og:title" content="Rogue Planet Studios Games Showcase" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://rogueplanetstudios.eu.org/games" />
+    <meta property="og:description" content="Explore the exciting games developed by Rogue Planet Studios. Stay updated with the latest releases and genres." />
+    <meta property="og:image" content="logo.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #222;
+            color: #fff;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            position: fixed top;
+            width: 100%;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            transition: background-color 1.5s;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 1.5s;
+        }
+
+        nav a:hover {
+            background-color: #555;
+            transition: background-color 0.3s;
+        }
+
+        #games-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .game-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            width: 300px;
+            text-align: center;
+            background-color: #333;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+
+        #did {
+            opacity: 15%;
+            color: red;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        #did:hover {
+            opacity: 100%;
+            color: orangered;
+            font-weight: bolder;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 style="margin: 0;">Rogue Planet Studios Games Showcase</h1>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Projects</a>
+            <a href="#">News</a>
+            <a href="#">Devs</a>
+            <a href="#">About</a>
+        </nav>
+    </header>
+
+    <div id="games-container"></div>
+
+    <footer>
+        &copy; 2024 Rogue Planet Studios. All rights reserved.
+    </footer>
+
+    <script>
+        // Function to fetch and display games from the CSV file
+        async function fetchGames() {
+            const response = await fetch('games.csv');
+            const text = await response.text();
+            const rows = text.split('\n');
+            
+            const gamesContainer = document.getElementById('games-container');
+            
+            rows.forEach((row, index) => {
+                if (index !== 0 && row.trim() !== '') {
+                    const columns = row.split(',');
+                    const gameBox = document.createElement('div');
+                    gameBox.className = 'game-box';
+                    
+                    // Assuming the order of columns in CSV is: GameID,Title,Description,ReleaseDate,Genre,DeveloperID
+                    const [gameID, title, description, releaseDate, genre, developerID] = columns;
+                    
+                    gameBox.innerHTML = `
+                        <h3>${title}</h3>
+                        <p>${description}</p>
+                        <p><strong>Genre:</strong> ${genre}</p>
+                        <p><strong>Release Date:</strong> ${releaseDate}</p>
+                        <p><strong>Developer ID:</strong><a id="did" href="dev.html#${developerID}"> ${developerID}</a></p>
+                    `;
+                    
+                    gamesContainer.appendChild(gameBox);
+                }
+            });
+        }
+
+        // Call the function when the page loads
+        window.onload = fetchGames;
+    </script>
+</body>
+</html>
